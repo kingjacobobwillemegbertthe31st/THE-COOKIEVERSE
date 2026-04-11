@@ -226,10 +226,9 @@ function drawMainCookie(){
 function mousePressed(){
   let gw = gameWidth();
   let centerX = gw / 2;
+  let panelX = width - shopWidth;
 
-  let panelX = width - shopWidth; // ✅ DECLARE ONCE HERE
-
-  // ===== BAKERY NAME CLICK =====
+  // ===== NAME =====
   if (mouseX > centerX - 150 && mouseX < centerX + 150 &&
       mouseY > 50 && mouseY < 80){
     let newName = prompt("Enter bakery name:", bakeryName);
@@ -240,83 +239,63 @@ function mousePressed(){
     return;
   }
 
-// ===== UPGRADE CLICK SYSTEM =====
-let cols = 5;
-let padding = 8;
-
-let cellW = (shopWidth - padding * (cols + 1)) / cols;
-let cellH = cellW;
-
-let upgradeAreaH = height * 0.25;
-let upgradeStartY = 60;
-
-let visibleUpgrades = upgrades.filter(u => u.unlocked && !u.bought);
-
-for (let i = 0; i < visibleUpgrades.length; i++){
-  let u = visibleUpgrades[i];
-
-  let col = i % cols;
-  let row = floor(i / cols);
-
-  let x = panelX + padding + col * (cellW + padding);
-  let y = upgradeStartY + 20 + row * (cellH + padding);
-
-  if (y > upgradeStartY + upgradeAreaH) continue;
-
-  if (
-    mouseX >= x && mouseX <= x + cellW &&
-    mouseY >= y && mouseY <= y + cellH
-  ){
-    if (cookies >= u.cost){
-      cookies -= u.cost;
-      u.bought = true;
-      updateCPS();
-
-      saveGame();
-    }
+  // ===== RESET =====
+  if (mouseX > 0 && mouseX < 120 && mouseY > 25 && mouseY < 55){
+    localStorage.removeItem("cookieSave");
+    location.reload();
     return;
   }
-}
-
-
-  // ===== RESET BUTTON =====
-// ===== RESET BUTTON =====
-// ===== RESET BUTTON =====
-if (mouseX > 0 && mouseX < 120 && mouseY > 25 && mouseY < 55){
-
-  localStorage.removeItem("cookieSave");
-  location.reload();
-
-  return;
-}
-
-  shopScroll = 0;
-
-  updateCPS();
-  saveGame();
-
-
 
   // ===== FULLSCREEN =====
   let fx = getFullscreenButtonX();
-
   if (mouseX > fx - 60 && mouseX < fx + 60 &&
       mouseY > 25 && mouseY < 55){
-
     let fs = fullscreen();
     fullscreen(!fs);
-
     resizeCanvas(windowWidth, windowHeight);
     updateLayout();
     setupCookie();
     return;
   }
-  
+
+  // ===== UPGRADES =====
+  let cols = 5;
+  let padding = 8;
+  let cellW = (shopWidth - padding * (cols + 1)) / cols;
+  let cellH = cellW;
+
+  let upgradeAreaH = height * 0.25;
+  let upgradeStartY = 60;
+
+  let visibleUpgrades = upgrades.filter(u => u.unlocked && !u.bought);
+
+  for (let i = 0; i < visibleUpgrades.length; i++){
+    let u = visibleUpgrades[i];
+
+    let col = i % cols;
+    let row = floor(i / cols);
+
+    let x = panelX + padding + col * (cellW + padding);
+    let y = upgradeStartY + 20 + row * (cellH + padding);
+
+    if (y > upgradeStartY + upgradeAreaH) continue;
+
+    if (
+      mouseX >= x && mouseX <= x + cellW &&
+      mouseY >= y && mouseY <= y + cellH
+    ){
+      if (cookies >= u.cost){
+        cookies -= u.cost;
+        u.bought = true;
+        updateCPS();
+        saveGame();
+      }
+      return;
+    }
+  }
 
   // ===== BUILDINGS =====
-  upgradeAreaH = height * 0.25;
   let buildingStartY = 60 + upgradeAreaH + 10;
-
   let startY = buildingStartY + 20 - shopScroll;
 
   if (mouseX > panelX){
@@ -324,7 +303,6 @@ if (mouseX > 0 && mouseX < 120 && mouseY > 25 && mouseY < 55){
       let y = startY + i * 60;
       let cost = getCost(buildings[i]);
 
-      // ✅ ONLY clickable if visible
       if (y < buildingStartY || y > height) continue;
 
       if (mouseY > y && mouseY < y + 60){
@@ -335,9 +313,11 @@ if (mouseX > 0 && mouseX < 120 && mouseY > 25 && mouseY < 55){
           saveGame();
         }
         return;
-      }}}
+      }
+    }
+  }
 
-  // ===== MAIN COOKIE =====
+  // ===== COOKIE =====
   if (!isClickHandled() &&
       dist(mouseX, mouseY, cookieX, cookieY) < cookieSize/2){
 
