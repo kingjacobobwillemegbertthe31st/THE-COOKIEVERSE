@@ -276,6 +276,7 @@ for (let i = 0; i < visibleUpgrades.length; i++){
     }
     return;
   }
+}
 
 
   // ===== RESET BUTTON =====
@@ -309,6 +310,7 @@ if (mouseX > 0 && mouseX < 120 && mouseY > 25 && mouseY < 55){
     updateLayout();
     setupCookie();
     return;
+  }
   
 
   // ===== BUILDINGS =====
@@ -333,7 +335,7 @@ if (mouseX > 0 && mouseX < 120 && mouseY > 25 && mouseY < 55){
           saveGame();
         }
         return;
-    
+      }}}
 
   // ===== MAIN COOKIE =====
   if (!isClickHandled() &&
