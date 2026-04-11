@@ -293,7 +293,7 @@ if (mouseX > 0 && mouseX < 120 && mouseY > 25 && mouseY < 55){
 
   updateCPS();
   saveGame();
-  return;
+}
 
 
   // ===== FULLSCREEN =====
