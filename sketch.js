@@ -742,6 +742,7 @@ function drawForegroundCookies(){
 function drawBackgroundCookies(){
   let gw = gameWidth();
 
+  // ===== ORIGINAL THRESHOLDS (UNCHANGED) =====
   let percent = 0;
   if (cps > 1000) percent = 0.8;
   else if (cps > 500) percent = 0.5;
@@ -752,9 +753,16 @@ function drawBackgroundCookies(){
   let avgSize = 26;
   let cookieArea = PI * pow(avgSize/2, 2);
 
+  // ===== TARGET =====
   let target = floor((area * percent) / cookieArea);
-  target = constrain(target, 0, 120);
 
+  // ===== FIX: REMOVE HARD CAP EFFECT =====
+  // old: constrain(target, 0, 120);
+  // new:
+  let maxCap = floor(area / cookieArea); // true max possible density
+  target = constrain(target, 0, maxCap);
+
+  // ===== SPAWN / DESPAWN =====
   while (bgCookies.length < target){
     bgCookies.push({
       x: random(gw),
@@ -769,13 +777,13 @@ function drawBackgroundCookies(){
     bgCookies.pop();
   }
 
+  // ===== UPDATE =====
   for (let c of bgCookies){
     c.wobble += 0.03;
 
     c.y += c.speed;
     c.x += sin(c.wobble) * 0.3;
 
-    // SAME FIX
     c.x = constrain(c.x, 0, gw);
 
     if (c.y > height + 60){
