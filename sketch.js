@@ -276,7 +276,7 @@ for (let i = 0; i < visibleUpgrades.length; i++){
     }
     return;
   }
-}
+
 
   // ===== RESET BUTTON =====
 // ===== RESET BUTTON =====
@@ -293,7 +293,7 @@ if (mouseX > 0 && mouseX < 120 && mouseY > 25 && mouseY < 55){
 
   updateCPS();
   saveGame();
-}
+
 
 
   // ===== FULLSCREEN =====
@@ -309,7 +309,7 @@ if (mouseX > 0 && mouseX < 120 && mouseY > 25 && mouseY < 55){
     updateLayout();
     setupCookie();
     return;
-  }
+  
 
   // ===== BUILDINGS =====
   upgradeAreaH = height * 0.25;
@@ -333,9 +333,7 @@ if (mouseX > 0 && mouseX < 120 && mouseY > 25 && mouseY < 55){
           saveGame();
         }
         return;
-      }
-    }
-  }
+    
 
   // ===== MAIN COOKIE =====
   if (!isClickHandled() &&
