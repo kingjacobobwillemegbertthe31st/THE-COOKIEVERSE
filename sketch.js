@@ -38,122 +38,119 @@ function setup(){
 
   // ===== UPGRADES =====
   upgrades = [
-    {
-      id: 0,
-      icon: "🖱️",
-      name: "Reinforced Finger",
-      cost: 120,
-      type: "cpc",
-      value: 1,
-      desc: "Clicks are stronger.",
-      unlocked: true,
-      bought: false
-    },
-    {
-      id: 1,
-      icon: "👆",
-      name: "Cursor Training",
-      cost: 600,
-      type: "building",
-      target: "Cursor",
-      value: 0.5,
-      desc: "Cursors are more efficient.",
-      unlocked: true,
-      bought: false
-    },
-    {
-      id: 2,
-      icon: "👵",
-      name: "Grandma Lessons",
-      cost: 2500,
-      type: "building",
-      target: "Grandma",
-      value: 0.5,
-      desc: "Grandmas bake better.",
-      unlocked: true,
-      bought: false
-    },
-    {
-      id: 3,
-      icon: "⚙️",
-      name: "Production Boost",
-      cost: 8000,
-      type: "globalCPS",
-      value: 0.2,
-      desc: "All production increases slightly.",
-      unlocked: true,
-      bought: false
-    },
-    {
-      id: 4,
-      icon: "🍳",
-      name: "Kitchen Efficiency",
-      cost: 25000,
-      type: "building",
-      target: "Kitchen",
-      value: 0.5,
-      desc: "Kitchens work faster.",
-      unlocked: true,
-      bought: false
-    },
-    {
-      id: 5,
-      icon: "📦",
-      name: "Bulk Baking",
-      cost: 90000,
-      type: "globalCPS",
-      value: 0.3,
-      desc: "Mass production improves output.",
-      unlocked: true,
-      bought: false
-    },
-    {
-      id: 6,
-      icon: "🖱️",
-      name: "Click Overload",
-      cost: 300000,
-      type: "cpc",
-      value: 1,
-      desc: "Clicks become much stronger.",
-      unlocked: true,
-      bought: false
-    },
-    {
-      id: 7,
-      icon: "🚚",
-      name: "Delivery Optimization",
-      cost: 1000000,
-      type: "building",
-      target: "Delivery Van",
-      value: 0.5,
-      desc: "Faster deliveries increase output.",
-      unlocked: true,
-      bought: false
-    },
-    {
-      id: 8,
-      icon: "⚛️",
-      name: "Reactor Stability",
-      cost: 6000000,
-      type: "building",
-      target: "Flavor Reactor",
-      value: 0.5,
-      desc: "Reactors waste less energy.",
-      unlocked: true,
-      bought: false
-    },
-    {
-      id: 9,
-      icon: "🌌",
-      name: "Dream Amplification",
-      cost: 75000000, // 5x building
-      type: "globalCPS",
-      value: 0.5,
-      desc: "Dreams produce more cookies.",
-      unlocked: true,
-      bought: false
-    }
-  ];
+  {
+    id: 0,
+    icon: "🖱️",
+    name: "Reinforced Finger",
+    cost: 120,
+    type: "cpc",
+    value: 1,
+    desc: "Clicks are slightly stronger.",
+    unlocked: true,
+    bought: false
+  },
+  {
+    id: 1,
+    icon: "🖱️",
+    name: "Rapid Clicking",
+    cost: 600,
+    type: "cpc",
+    value: 2,
+    desc: "Faster clicking increases output.",
+    unlocked: true,
+    bought: false
+  },
+  {
+    id: 2,
+    icon: "👆",
+    name: "Cursor Training",
+    cost: 2500,
+    type: "building",
+    target: "Cursor",
+    value: 0.5,
+    desc: "Cursors are more efficient.",
+    unlocked: true,
+    bought: false
+  },
+  {
+    id: 3,
+    icon: "⚙️",
+    name: "Production Boost",
+    cost: 8000,
+    type: "globalCPS",
+    value: 0.2,
+    desc: "All production increases slightly.",
+    unlocked: true,
+    bought: false
+  },
+  {
+    id: 4,
+    icon: "🖱️",
+    name: "Heavy Clicks",
+    cost: 25000,
+    type: "cpc",
+    value: 4,
+    desc: "Clicks become much stronger.",
+    unlocked: true,
+    bought: false
+  },
+  {
+    id: 5,
+    icon: "🍳",
+    name: "Kitchen Efficiency",
+    cost: 90000,
+    type: "building",
+    target: "Kitchen",
+    value: 0.5,
+    desc: "Kitchens work faster.",
+    unlocked: true,
+    bought: false
+  },
+  {
+    id: 6,
+    icon: "🖱️",
+    name: "Click Overload",
+    cost: 300000,
+    type: "cpc",
+    value: 8,
+    desc: "Clicks become extremely powerful.",
+    unlocked: true,
+    bought: false
+  },
+  {
+    id: 7,
+    icon: "📦",
+    name: "Bulk Baking",
+    cost: 1000000,
+    type: "globalCPS",
+    value: 0.3,
+    desc: "Mass production improves output.",
+    unlocked: true,
+    bought: false
+  },
+  {
+    id: 8,
+    icon: "✨",
+    name: "Golden Touch",
+    cost: 6000000,
+    type: "clickCPSPercent",
+    value: 0.01,
+    desc: "Each click gives bonus cookies equal to 1% of CPS.",
+    unlocked: true,
+    bought: false
+  },
+  {
+    id: 9,
+    icon: "🌌",
+    name: "Dream Amplification",
+    cost: 75000000,
+    type: "globalCPS",
+    value: 0.5,
+    desc: "Dreams produce more cookies.",
+    unlocked: true,
+    bought: false
+  }
+];
 
   // LOAD AFTER defining upgrades
   loadGame();
