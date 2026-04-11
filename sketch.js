@@ -280,18 +280,14 @@ for (let i = 0; i < visibleUpgrades.length; i++){
 
   // ===== RESET BUTTON =====
 // ===== RESET BUTTON =====
+// ===== RESET BUTTON =====
 if (mouseX > 0 && mouseX < 120 && mouseY > 25 && mouseY < 55){
-  cookies = 0;
 
-  // reset buildings
-  for (let b of buildings){
-    b.owned = 0;
-  }
+  localStorage.removeItem("cookieSave");
+  location.reload();
 
-  // reset upgrades
-  for (let u of upgrades){
-    u.bought = false;
-  }
+  return;
+}
 
   shopScroll = 0;
 
