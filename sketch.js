@@ -1136,15 +1136,9 @@ ellipse(0, 0, gc.size * 1.25 * gc.scale);
     }
   }
 }
-    function addEffect(e){
+function addEffect(e){
   e.timeLeft = e.duration;
   activeEffects.push(e);
-
-  effectBoxes.push({
-    name: e.name,
-    desc: e.desc,
-    timeLeft: e.duration
-  });
 }
 function updateEffects(){
   for (let i = activeEffects.length - 1; i >= 0; i--){
@@ -1228,22 +1222,16 @@ function getCPS(){
 }
 function triggerGoldenCookie(gc){
 
-  let type = gc.effect || rollEffect();
-
-  // 🧠 unified UI message helper
-  function showGCBox(name, desc){
-    effectBoxes.push({
-      name: name,
-      desc: desc,
-      timeLeft: 4000
-    });
-  }
-
-  // ===== CHAIN MODE =====
   if (chainActive){
     cookies += chainValue;
 
-    showGCBox("Cookie Chain!", "+" + formatNumber(chainValue));
+    addEffect({
+      name: "Cookie Chain!",
+      desc: "+" + formatNumber(chainValue),
+      type: "chain",
+      value: chainValue,
+      duration: 4000
+    });
 
     chainValue = chainValue * 10 + 7;
 
@@ -1259,36 +1247,66 @@ function triggerGoldenCookie(gc){
     return;
   }
 
-  // ===== EFFECTS =====
+  let type = gc.effect || rollEffect();
+
   if (type === "Lucky"){
     let gain = calcLucky();
     cookies += gain;
-    showGCBox("Lucky!", "+" + formatNumber(gain));
+
+    addEffect({
+      name: "Lucky!",
+      desc: "+" + formatNumber(gain),
+      type: "lucky",
+      value: gain,
+      duration: 4000
+    });
   }
 
   else if (type === "Frenzy"){
     doFrenzy();
-    showGCBox("Frenzy!", "x7 CPS");
+    addEffect({
+      name: "Frenzy!",
+      desc: "x7 CPS",
+      type: "cpsMult",
+      value: 7,
+      duration: 77000
+    });
   }
 
   else if (type === "Building Special"){
     doBuildingSpecial();
-    showGCBox("Building Special!", "Boost active");
+    addEffect({
+      name: "Building Special!",
+      desc: "Boost active",
+      type: "buildingBoost",
+      value: 1,
+      duration: 30000
+    });
   }
 
   else if (type === "Click Frenzy"){
     doClickFrenzy();
-    showGCBox("Click Frenzy!", "x500 clicks");
+    addEffect({
+      name: "Click Frenzy!",
+      desc: "x500 clicks",
+      type: "cpcMult",
+      value: 500,
+      duration: 13000
+    });
   }
 
   else if (type === "Cookie Storm"){
     doStorm();
-    showGCBox("Cookie Storm!", "Raining cookies");
+    addEffect({
+      name: "Cookie Storm!",
+      desc: "Raining cookies",
+      type: "storm",
+      duration: 7000
+    });
   }
 
   else if (type === "Cookie Chain"){
     startChain();
-    showGCBox("Cookie Chain!", "Keep clicking!");
   }
 }
 function doLucky(){
