@@ -1360,11 +1360,17 @@ function drawEffectBoxes(){
   let h = 50;
   let gap = 8;
 
-  let x = gameWidth() - w - 10;
-  let y = 70;
+  // 🔥 FIX: anchor to shop border correctly
+  let x = width - shopWidth - w - 10;
+  let y = 90;
 
   for (let i = activeEffects.length - 1; i >= 0; i--){
     let e = activeEffects[i];
+
+    if (e.timeLeft <= 0){
+      activeEffects.splice(i, 1);
+      continue;
+    }
 
     let yy = y + i * (h + gap);
 
@@ -1374,6 +1380,7 @@ function drawEffectBoxes(){
     rect(x, yy, w, h, 6);
     noStroke();
 
+    // name + desc
     fill(0);
     textAlign(LEFT, TOP);
     textSize(12);
@@ -1381,6 +1388,7 @@ function drawEffectBoxes(){
     text(e.name, x + 8, yy + 5);
     text(e.desc, x + 8, yy + 20, w - 16);
 
+    // timer
     let t = max(0, ceil(e.timeLeft / 1000));
     textAlign(RIGHT, TOP);
     text(t + "s", x + w - 8, yy + 5);
