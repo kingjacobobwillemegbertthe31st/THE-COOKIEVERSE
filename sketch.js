@@ -310,7 +310,20 @@ if (mouseX > 0 && mouseX < 120 && mouseY > 25 && mouseY < 55){
 
   return;
 }
+// ===== GOLDEN COOKIE CLICK =====
+for (let i = goldenCookies.length - 1; i >= 0; i--){
+  let gc = goldenCookies[i];
 
+  let d = dist(mouseX, mouseY, gc.x, gc.y);
+
+  if (d < (gc.size * gc.scale) / 2){
+
+    triggerGoldenCookie(gc);
+
+    goldenCookies.splice(i, 1); // remove after click
+    return; // stop everything else
+  }
+}
   // ===== FULLSCREEN =====
   let fx = getFullscreenButtonX();
   if (mouseX > fx - 60 && mouseX < fx + 60 &&
