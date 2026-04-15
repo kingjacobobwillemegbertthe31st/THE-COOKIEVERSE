@@ -1355,6 +1355,7 @@ function doBuildingSpecial(){
   });
 }
 function drawEffectBoxes(){
+
   let w = 200;
   let h = 50;
   let gap = 8;
@@ -1362,13 +1363,8 @@ function drawEffectBoxes(){
   let x = gameWidth() - w - 10;
   let y = 70;
 
-  for (let i = effectBoxes.length - 1; i >= 0; i--){
-    let b = effectBoxes[i];
-
-    if (b.timeLeft <= 0){
-      effectBoxes.splice(i, 1);
-      continue;
-    }
+  for (let i = activeEffects.length - 1; i >= 0; i--){
+    let e = activeEffects[i];
 
     let yy = y + i * (h + gap);
 
@@ -1378,16 +1374,14 @@ function drawEffectBoxes(){
     rect(x, yy, w, h, 6);
     noStroke();
 
-    // name + desc
     fill(0);
     textAlign(LEFT, TOP);
     textSize(12);
 
-    text(b.name, x + 8, yy + 5);
-    text(b.desc, x + 8, yy + 20, w - 16);
+    text(e.name, x + 8, yy + 5);
+    text(e.desc, x + 8, yy + 20, w - 16);
 
-    // timer
-    let t = max(0, ceil(b.timeLeft / 1000));
+    let t = max(0, ceil(e.timeLeft / 1000));
     textAlign(RIGHT, TOP);
     text(t + "s", x + w - 8, yy + 5);
   }
@@ -1581,4 +1575,8 @@ function fullReset(){
 localStorage.setItem("devUnlocked", "false");
 
   console.log("FULL RESET DONE");
+}
+function addEffect(e){
+  e.timeLeft = e.duration;
+  activeEffects.push(e);
 }
