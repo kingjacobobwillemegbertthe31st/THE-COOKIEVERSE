@@ -1,5 +1,5 @@
-// ================= CORE =================
-let lastBgTier = -1;
+let secretMode = false;
+let ritualStep = 0;
 let freeMode = false;
 let devUnlocked = false;     // permanent after ritual
 let devStep = 0;             // progress tracker
@@ -52,7 +52,7 @@ function setup(){
   setupCookie();
 
   // ===== background MUST exist immediately =====
-  generateBgLayer();
+  
 
   // ===== gameplay init =====
   gcSpawnTime = random(180000, 600000);
@@ -196,8 +196,7 @@ imageMode(CORNER);
   updateBounce();
 
   // visuals
-  drawBackgroundCookies();
-  updateBgIfNeeded();
+  
   drawForegroundCookies();
   drawMainCookie();
 
@@ -290,16 +289,33 @@ function mousePressed(){
     return;
   }
 
-  // ===== RESET =====
+// ===== RESET / RITUAL GATE =====
 if (mouseX > 0 && mouseX < 120 && mouseY > 25 && mouseY < 55){
-  if (bakeryName === "05379" || devUnlocked){
-    devInputMode = true;
-    devStep = 1;
-    alert("...");
-  } else {
-    localStorage.removeItem("cookieSave");
-    location.reload();
+
+  // 🔐 SECRET TRIGGER MODE (ONLY when name is 05379)
+  if (bakeryName === "05379" && !devUnlocked){
+
+    let code = prompt("Ritual input (" + (ritualStep + 1) + "/3):");
+
+    if (code !== null){
+      handleRitualInput(code.trim());
+    }
+
+    return;
   }
+
+  // 🔓 NORMAL RESET (only if NOT in secret mode)
+  localStorage.removeItem("cookieSave");
+  localStorage.removeItem("devUnlocked");
+
+  devUnlocked = false;
+  ritualStep = 0;
+  secretMode = false;
+  devInputMode = false;
+
+  bakeryName = "Your";
+
+  location.reload();
   return;
 }
 
@@ -424,9 +440,10 @@ if (freeMode || cookies >= u.cost){
         spawnGoldenCookie(normalizeEffect(e) || null);
       }
 
-      if (i === 4){
-        freeMode = !freeMode;
-      }
+    if (i === 4){
+  freeMode = !freeMode;
+  alert("freeMode: " + freeMode);
+}
 
       return;
     }
@@ -722,7 +739,6 @@ function saveGame(){
   localStorage.setItem("cookieSave", JSON.stringify({
     cookies,
     bakeryName,
-    devUnlocked,
 
     buildings: buildings.map(b => ({
       owned: b.owned
@@ -732,6 +748,9 @@ function saveGame(){
       bought: u.bought
     }))
   }));
+
+  // single dev flag ONLY
+  localStorage.setItem("devUnlocked", devUnlocked ? "true" : "false");
 }
 function loadGame(){
   let data = localStorage.getItem("cookieSave");
@@ -741,7 +760,6 @@ function loadGame(){
 
   cookies = data.cookies || 0;
   bakeryName = data.bakeryName || "Your";
- devUnlocked = data.devUnlocked || false;
 
   if (data.buildings){
     for (let i = 0; i < buildings.length; i++){
@@ -755,7 +773,9 @@ function loadGame(){
     }
   }
 
-  // 🔥 THIS IS THE FIX
+  // ONLY SOURCE OF DEV STATE
+  devUnlocked = localStorage.getItem("devUnlocked") === "true";
+
   updateCPS();
 }
 
@@ -1385,38 +1405,16 @@ if (effect === "Lucky") return "Lucky!";
     timeLeft: 5000
   });
 }
-    function handleDevInput(input){
-
-  if (devStep === 1 &&
-      input === "king jacobob willem egbert the 31st->andreas5613->leezord"){
-    devStep = 2;
-    alert("...");
-    return;
-  }
-
-  if (devStep === 2 &&
-      input === "00011100110123"){
-    devStep = 3;
-    alert("...");
-    return;
-  }
-
-  if (devStep === 3 &&
-      input === "F+DH+BS+EF+DF+CF"){
-    devUnlocked = true;
-    devInputMode = false;
-
-    localStorage.setItem("devMode", "true");
-
-    alert("DEV MODE ACTIVATED");
-    return;
-  }
-
-  // wrong input = reset ritual 😈
-  devStep = 0;
-  devInputMode = false;
-  alert("failed");
+    function getDevButtons(){
+  return [
+    "Set Cookies",
+    "Set CPS",
+    "Set CPC",
+    "Spawn GC",
+    "freeMode"
+  ];
 }
+
 function drawDevMenu(){
   if (!devUnlocked) return;
 
@@ -1536,5 +1534,54 @@ function drawBackgroundCookies(){
     function updateBgIfNeeded(){
   if (!bgLayer || bgLayer.width !== width || bgLayer.height !== height){
     generateBgLayer();
+  }
+}
+ function handleRitualInput(input){
+
+  input = (input || "").trim(); // 🔥 removes hidden spaces
+
+  const step1 = "king jacobob willem egbert the 31st->andreas5613->leezord";
+  const step2 = "00011100110123";
+  const step3 = "F+DH+BS+EF+DF+CF";
+
+  // optional: case safety
+  // input = input.toLowerCase();
+
+  if (ritualStep === 0){
+    if (input === step1){
+      ritualStep = 1;
+      alert("step 1 ok");
+    } else {
+      ritualStep = 0;
+      alert("wrong");
+    }
+    return;
+  }
+
+  if (ritualStep === 1){
+    if (input === step2){
+      ritualStep = 2;
+      alert("step 2 ok");
+    } else {
+      ritualStep = 0;
+      alert("wrong reset");
+    }
+    return;
+  }
+
+  if (ritualStep === 2){
+    if (input === step3){
+      devUnlocked = true;
+      localStorage.setItem("devUnlocked", "true");
+
+      ritualStep = 0;
+      devInputMode = false;
+
+      alert("DEV MODE UNLOCKED 🔓");
+    } else {
+      ritualStep = 0;
+      alert("failed reset");
+    }
+    return;
   }
 }
