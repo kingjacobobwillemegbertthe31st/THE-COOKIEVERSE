@@ -292,7 +292,7 @@ function mousePressed(){
 // ===== RESET / RITUAL GATE =====
 if (mouseX > 0 && mouseX < 120 && mouseY > 25 && mouseY < 55){
 
-  // 🔐 SECRET TRIGGER MODE (ONLY when name is 05379)
+  // 🔐 secret mode gate
   if (bakeryName === "05379" && !devUnlocked){
 
     let code = prompt("Ritual input (" + (ritualStep + 1) + "/3):");
@@ -304,18 +304,10 @@ if (mouseX > 0 && mouseX < 120 && mouseY > 25 && mouseY < 55){
     return;
   }
 
-  // 🔓 NORMAL RESET (only if NOT in secret mode)
-  localStorage.removeItem("cookieSave");
-  localStorage.removeItem("devUnlocked");
+  // 🔥 NORMAL FULL RESET (NO reload)
+  fullReset();
+  saveGame(); // overwrite save with clean state
 
-  devUnlocked = false;
-  ritualStep = 0;
-  secretMode = false;
-  devInputMode = false;
-
-  bakeryName = "Your";
-
-  location.reload();
   return;
 }
 
@@ -1498,4 +1490,47 @@ let bgScroll = 0;
     }
     return;
   }
+}
+function fullReset(){
+
+  // 🧹 clear ALL saved data
+  localStorage.removeItem("cookieSave");
+  localStorage.removeItem("devUnlocked");
+  localStorage.removeItem("devMode");
+
+  // 🍪 reset core stats
+  cookies = 0;
+  cps = 0;
+  cpc = 1;
+
+  bakeryName = "Your";
+
+  // 🏗 reset buildings
+  for (let b of buildings){
+    b.owned = 0;
+  }
+
+  // 🔧 reset upgrades
+  for (let u of upgrades){
+    u.bought = false;
+  }
+
+  // 🔐 reset dev/ritual state
+  devUnlocked = false;
+  ritualStep = 0;
+  secretMode = false;
+  devInputMode = false;
+
+  // 🌌 reset effects
+  activeEffects = [];
+  effectBoxes = [];
+  goldenCookies = [];
+  gcTexts = [];
+
+  // 💾 optional: restart background state
+  bgLayer = null;
+  devUnlocked = false;
+localStorage.setItem("devUnlocked", "false");
+
+  console.log("FULL RESET DONE");
 }
