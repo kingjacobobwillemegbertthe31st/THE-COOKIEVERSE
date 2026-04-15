@@ -1228,14 +1228,22 @@ function getCPS(){
 }
 function triggerGoldenCookie(gc){
 
+  let type = gc.effect || rollEffect();
+
+  // 🧠 unified UI message helper
+  function showGCBox(name, desc){
+    effectBoxes.push({
+      name: name,
+      desc: desc,
+      timeLeft: 4000
+    });
+  }
+
+  // ===== CHAIN MODE =====
   if (chainActive){
     cookies += chainValue;
 
-    effectBoxes.push({
-      name: "Chain!",
-      desc: "+" + formatNumber(chainValue),
-      timeLeft: 1000
-    });
+    showGCBox("Cookie Chain!", "+" + formatNumber(chainValue));
 
     chainValue = chainValue * 10 + 7;
 
@@ -1244,7 +1252,6 @@ function triggerGoldenCookie(gc){
       return;
     }
 
-    // 🔥 delayed spawn (FIX)
     setTimeout(() => {
       spawnGoldenCookie("Cookie Chain");
     }, 0);
@@ -1252,14 +1259,37 @@ function triggerGoldenCookie(gc){
     return;
   }
 
-  let type = gc.effect || rollEffect();
+  // ===== EFFECTS =====
+  if (type === "Lucky"){
+    let gain = calcLucky();
+    cookies += gain;
+    showGCBox("Lucky!", "+" + formatNumber(gain));
+  }
 
-  if (type === "Lucky") doLucky();
-  if (type === "Frenzy") doFrenzy();
-  if (type === "Building Special") doBuildingSpecial();
-  if (type === "Click Frenzy") doClickFrenzy();
-  if (type === "Cookie Storm") doStorm();
-  if (type === "Cookie Chain") startChain();
+  else if (type === "Frenzy"){
+    doFrenzy();
+    showGCBox("Frenzy!", "x7 CPS");
+  }
+
+  else if (type === "Building Special"){
+    doBuildingSpecial();
+    showGCBox("Building Special!", "Boost active");
+  }
+
+  else if (type === "Click Frenzy"){
+    doClickFrenzy();
+    showGCBox("Click Frenzy!", "x500 clicks");
+  }
+
+  else if (type === "Cookie Storm"){
+    doStorm();
+    showGCBox("Cookie Storm!", "Raining cookies");
+  }
+
+  else if (type === "Cookie Chain"){
+    startChain();
+    showGCBox("Cookie Chain!", "Keep clicking!");
+  }
 }
 function doLucky(){
   let gain = min(
