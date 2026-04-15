@@ -266,18 +266,34 @@ function drawMainCookie(){
 
 // ================= CLICK =================
 function mousePressed(){
+
   let gw = gameWidth();
   let centerX = gw / 2;
   let panelX = width - shopWidth;
-  
-  if (devInputMode){
-  let code = prompt("Enter code:");
-  if (code){
-    handleDevInput(code);
-  }
-  return;
-}
 
+  if (devInputMode){
+    let code = prompt("Enter code:");
+    if (code){
+      handleDevInput(code);
+    }
+    return;
+  }
+
+  // =====🔥 MUST BE FIRST GAME CLICK CHECK =====
+  for (let i = goldenCookies.length - 1; i >= 0; i--){
+    let gc = goldenCookies[i];
+
+    let hitRadius = (gc.size * gc.scale) / 2;
+
+    if (dist(mouseX, mouseY, gc.x, gc.y) < hitRadius){
+
+      triggerGoldenCookie(gc);
+      goldenCookies.splice(i, 1);
+
+      console.log("GC CLICKED"); // DEBUG
+      return;
+    }
+  }
   // ===== NAME =====
   if (mouseX > centerX - 150 && mouseX < centerX + 150 &&
       mouseY > 50 && mouseY < 80){
@@ -310,20 +326,7 @@ if (mouseX > 0 && mouseX < 120 && mouseY > 25 && mouseY < 55){
 
   return;
 }
-// ===== GOLDEN COOKIE CLICK =====
-for (let i = goldenCookies.length - 1; i >= 0; i--){
-  let gc = goldenCookies[i];
 
-  let d = dist(mouseX, mouseY, gc.x, gc.y);
-
-  if (d < (gc.size * gc.scale) / 2){
-
-    triggerGoldenCookie(gc);
-
-    goldenCookies.splice(i, 1); // remove after click
-    return; // stop everything else
-  }
-}
   // ===== FULLSCREEN =====
   let fx = getFullscreenButtonX();
   if (mouseX > fx - 60 && mouseX < fx + 60 &&
