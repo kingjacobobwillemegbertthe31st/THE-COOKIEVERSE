@@ -280,20 +280,22 @@ function mousePressed(){
   }
 
   // =====🔥 MUST BE FIRST GAME CLICK CHECK =====
-  for (let i = goldenCookies.length - 1; i >= 0; i--){
-    let gc = goldenCookies[i];
+for (let i = goldenCookies.length - 1; i >= 0; i--){
+  let gc = goldenCookies[i];
 
-    let hitRadius = (gc.size * gc.scale) / 2;
+  // 👇 ALWAYS minimum clickable size
+  let scale = max(gc.scale, 0.5);
 
-    if (dist(mouseX, mouseY, gc.x, gc.y) < hitRadius){
+  let hitRadius = (gc.size * scale) / 2;
 
-      triggerGoldenCookie(gc);
-      goldenCookies.splice(i, 1);
+  if (dist(mouseX, mouseY, gc.x, gc.y) < hitRadius){
+    triggerGoldenCookie(gc);
+    goldenCookies.splice(i, 1);
 
-      console.log("GC CLICKED"); // DEBUG
-      return;
-    }
+    console.log("GC CLICKED");
+    return;
   }
+}
   // ===== NAME =====
   if (mouseX > centerX - 150 && mouseX < centerX + 150 &&
       mouseY > 50 && mouseY < 80){
@@ -1043,7 +1045,7 @@ function updateCPC(){
 
   pop();
 }
-    function updateGoldenCookies(){
+function updateGoldenCookies(){
   gcTimer += deltaTime;
 
   // spawn
@@ -1053,32 +1055,29 @@ function updateCPC(){
     gcSpawnTime = random(180000, 600000);
   }
 
-  // update each GC
   for (let i = goldenCookies.length - 1; i >= 0; i--){
     let gc = goldenCookies[i];
 
     gc.life += deltaTime;
 
-    // grow (0–1 sec)
+    // grow (0–1s)
     if (gc.life <= 1000){
-      gc.scale = gc.life / 1000;
+      gc.scale = 0.7 + (gc.life / 1000) * 0.3;
     }
-    // full (1–10 sec)
+    // full (1–10s)
     else if (gc.life <= 10000){
       gc.scale = 1;
     }
-    // shrink (10–11 sec)
+    // shrink (10–11s)
     else if (gc.life <= 11000){
-      gc.scale = 1 - (gc.life - 10000)/1000;
+      gc.scale = 1 - (gc.life - 10000) / 1000;
     }
 
-    // remove after 11 sec
     if (gc.life >= 11000){
       goldenCookies.splice(i, 1);
     }
   }
 
-  // effect timer
   if (activeEffect){
     effectTimer -= deltaTime;
     if (effectTimer <= 0){
@@ -1086,16 +1085,19 @@ function updateCPC(){
     }
   }
 }
-   function spawnGoldenCookie(effect = null){
+function spawnGoldenCookie(effect = null){
   let gw = gameWidth();
 
   goldenCookies.push({
     x: random(50, gw - 50),
     y: random(100, height - 50),
     size: 80,
-    scale: 0,
+
+    // 🔥 FIX: never start at 0
+    scale: 0.7,
+
     life: 0,
-    effect: effect // 👈 DO NOT override here
+    effect: effect
   });
 }
     function drawGoldenCookies(){
